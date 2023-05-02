@@ -10,11 +10,12 @@ void puts_half(char *str)
 {
 	int lenght = 0;
 	int l = 0;
+	char *s = str;
 	int w;
 
-	while (*str != '\0')
+	while (*s != '\0')
 	{
-		str++;
+		s++;
 		lenght++;
 	}
 	l = lenght - 1;
