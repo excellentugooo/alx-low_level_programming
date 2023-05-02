@@ -2,11 +2,11 @@
 #include <stdio.h>
 
 /**
- * puts_half - a function that prints half of a string.
+ * puts2 - that prints every other character of a string, starting with the first character
  * @str: string
  */
 
-void puts_half(char *str)
+void puts2(char *str)
 {
 	int lenght = 0;
 	int l = 0;
