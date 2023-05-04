@@ -29,7 +29,7 @@ void print_buffer(char *b, int size)
 				printf("%02x", *(b + x + z));
 			else
 				printf("  ");
-			if (i % 2)
+			if (z % 2)
 			{
 				printf(" ");
 			}
