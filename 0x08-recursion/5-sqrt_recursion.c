@@ -42,6 +42,6 @@ int natural_sqrt(int num, int it)
 	}
 	else
 	{
-		return (natural_sqrt(n, it + 1));
+		return (natural_sqrt(num, it + 1));
 	}
 }
