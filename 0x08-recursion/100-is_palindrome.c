@@ -1,7 +1,7 @@
 #include "main.h"
 
 int checks(char *s, int it, int lenght);
-int strlen(char *s);
+int strlenght(char *s);
 
 /**
  * is_palindrome - checks if a string is a palindrome
@@ -18,18 +18,18 @@ int is_palindrome(char *s)
 	}
 	else
 	{
-	return (checks(s, 0, strlen(s)));
+	return (checks(s, 0, strlenght(s)));
 	}
 }
 
 /**
- * strlen - returns the length of a string
+ * strlenght - returns the length of a string
  * using recursion
  * @s: input string
  *
  * Return: length
  */
-int strlen(char *s)
+int strlenght(char *s)
 {
 	if (*s == '\0')
 	{
@@ -37,7 +37,7 @@ int strlen(char *s)
 	}
 	else
 	{
-	return (1 + strlen(s + 1));
+	return (1 + strlenght(s + 1));
 	}
 }
 
