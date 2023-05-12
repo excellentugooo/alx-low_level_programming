@@ -1,1 +1,1 @@
-My c programming journey
+Creating a static library
