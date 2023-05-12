@@ -12,9 +12,9 @@
  * Return: lenght
  */
 
-int _strlen(char *s)
+unsigned int _strlen(char *s)
 {
-	int lenght = 0;
+	unsigned int lenght = 0;
 
 	while (*s != '\0')
 	{
