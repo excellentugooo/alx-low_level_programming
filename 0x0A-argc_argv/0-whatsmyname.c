@@ -3,8 +3,8 @@
 
 /**
  * main - prints its name, followed by a new line.
- * @agrc: number of argument
- * @agrv: array of argument
+ * @argc: number of argument
+ * @argv: array of argument
  *
  * Return: 0 success
  */
