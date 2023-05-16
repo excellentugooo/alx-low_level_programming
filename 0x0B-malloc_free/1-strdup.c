@@ -6,10 +6,35 @@
  * which contains a copy of the string given as a parameter.
  * @str: string
  *
- * Return: on success and null on faillure
+ * Return: dup on success and null on faillure
  */
 
 char *_strdup(char *str)
 {
+	char *dup;
+	int a, b;
 
+	if (str == NULL)
+	{
+		return (NULL);
+	}
+
+	a = 0;
+	while (str[a] != '\0')
+	{
+		a++;
+	}
+
+	dup = malloc((a + 1) * sizeof(char));
+
+	if (dup == NULL)
+	{
+		return (NULL);
+	}
+	for (b = 0; st[b]; b++)
+	{
+		dup[b] = str[b];
+	}
+
+	return (dup);
 }
