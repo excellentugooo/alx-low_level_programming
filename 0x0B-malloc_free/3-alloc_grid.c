@@ -22,7 +22,7 @@ int **alloc_grid(int width, int height)
 
 	ret = malloc(height * sizeof(int));
 
-	if (ref == NULL)
+	if (ret == NULL)
 	{
 		return (NULL);
 	}
@@ -47,5 +47,5 @@ int **alloc_grid(int width, int height)
 			ret[a][b] = 0;
 		}
 	}
-	return (mee);
+	return (ret);
 }
