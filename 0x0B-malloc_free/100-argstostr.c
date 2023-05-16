@@ -40,10 +40,10 @@ char *argstostr(int ac, char **av)
 			s[c] = av[a][b];
 			c++;
 		}
-	}
 	if (s[c] == '\0')
 	{
 		s[c++] = '\n';
+	}
 	}
 	return (s);
 }
