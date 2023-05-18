@@ -1,20 +1,27 @@
 #include "main.h"
 #include <stdlib.h>
+#include <stdio.h>
+
 #define ERR_MSG "Error"
 
 /**
  * _isdigit - check if numbers are 0 - 9
- * @c: char to be checked
+ * @c: string
  *
  * Return: 0 or 1
  */
 
-int _isdigit(int c)
+int _isdigit(char *c)
 {
-	if (c >= '0' && c <= '9')
-		return (1);
-	else
-		return (0);
+	int x = 0;
+
+	while (c[x])
+	{
+		if (c[x] < '0' || c[x] > '9')
+			return (0);
+		x++;
+	}
+	return (1);	
 }
 
 /**
@@ -76,6 +83,7 @@ int main(int argc, char *argv[])
 	for (x = 0; x <= l1 + l2; x++)
 		result[x] = 0;
 	for (l1 = l1 - 1; l1 >= 0; l1--)
+	{
 		d1 = str1[l1] - '0';
 		c = 0;
 		for (l2 = _strlen(str2) - 1; l2 >= 0; l2--)
@@ -87,11 +95,14 @@ int main(int argc, char *argv[])
 		}
 		if (c > 0)
 			result[l1 + l2 + 1] += c;
+	}
 	for (x = 0; x < lenght - 1; x++)
+	{
 		if (result[x])
 			y = 1;
 		if (y)
-			_putchar(result[x] + '0');
+		_putchar(result[x] + '0');
+	}
 	if (!y)
 		_putchar('0');
 	_putchar('\n');
