@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 		c = 0;
 		for (lenght2 = _strlen(str2) - 1; lenght2 >= 0; lenght2--)
 		{
-			d2 = s2[lenght2] - '0';
+			d2 = str2[lenght2] - '0';
 			c += result[lenght1 + lenght2 + 1] + (d1 * d2);
 			result[lenght1 + lenght2 + 1] = c % 10;
 			c /= 10;
