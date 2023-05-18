@@ -15,9 +15,12 @@ char *string_nconcat(char *s1, char *s2, unsigned int n)
 	char *s;
 	unsigned int lenght1, lenght2, lenght, x;
 
-	if (s1 == NULL || s2 == NULL)
+	if (s1 == NULL)
 	{
 		s1 = "";
+	}
+	if (s2 == NULL)
+	{
 		s2 = "";
 	}
 	for (lenght1 = 0; s1[lenght1] != '\0'; lenght1++)
