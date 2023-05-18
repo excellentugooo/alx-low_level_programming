@@ -6,7 +6,7 @@
  * @ptr: pointer to the memory
  * @old_size: size, in bytes, of the allocated space
  * @new_size: new size, in bytes of the new memory block
- * 
+ *
  * Return: pointer
  */
 
