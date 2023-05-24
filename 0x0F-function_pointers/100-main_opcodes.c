@@ -29,14 +29,14 @@ int main(int argc, char *argv[])
 
 	array = (char *)main;
 
-	for (i = 0; i < byt; i++)
+	for (x = 0; x < byt; x++)
 	{
-		if (i == byt - 1)
+		if (x == byt - 1)
 		{
-			printf("%02hhx\n", array[i]);
+			printf("%02hhx\n", array[x]);
 			break;
 		}
-		printf("%02hhx ", array[i]);
+		printf("%02hhx ", array[x]);
 	}
 	return (0);
 }
