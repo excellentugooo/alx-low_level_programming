@@ -9,7 +9,7 @@
  * Return: Always 0.
  */
 
-int main(int __attribute__((__unused__)) argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	int num1, num2;
 	char *ops;
@@ -24,7 +24,7 @@ int main(int __attribute__((__unused__)) argc, char *argv[])
 	ops = argv[2];
 	num2 = atoi(argv[3]);
 
-	if (get_op_func(op) == NULL || ops[1] != '\0')
+	if (get_op_func(ops) == NULL || ops[1] != '\0')
 	{
 		printf("Error\n");
 		exit(99);
@@ -37,7 +37,7 @@ int main(int __attribute__((__unused__)) argc, char *argv[])
 		exit(100);
 	}
 
-	printf("%d\n", get_op_func(op)(num1, num2));
+	printf("%d\n", get_op_func(ops)(num1, num2));
 
 	return (0);
 }
