@@ -18,7 +18,7 @@ struct list_t
 {
 	char *str;
 	unsigned int len;
-	struct list *next;
+	struct list_t *next;
 };
 
 /**
