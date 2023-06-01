@@ -1,4 +1,4 @@
-#include "listss.h"
+#include "lists.h"
 
 /**
  * add_node_end - adds a new node at the end of a list_t list.
@@ -10,11 +10,11 @@
 
 list_t *add_node_end(list_t **head, const char *str)
 {
-	list_t last;
+	list_t *last;
 	unsigned int l;
 	list_t *empty = *head;
 
-	for (l = 0; last[l] != '\0'; l++)
+	for (l = 0; str[l] != '\0'; l++)
 		;
 
 	last = malloc(sizeof(list_t));
