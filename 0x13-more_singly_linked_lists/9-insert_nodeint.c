@@ -23,9 +23,9 @@ listint_t *insert_nodeint_at_index(listint_t **head, unsigned int idx, int n)
 
 	if (idx == 0)
 	{
-		inset->next = *head;
-		*head = new;
-		return (new);
+		insert->next = *head;
+		*head = insert;
+		return (insert);
 	}
 
 	for (i = 0;box && i < idx; i++)
