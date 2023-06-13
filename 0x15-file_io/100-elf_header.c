@@ -17,7 +17,7 @@ void check_e(unsigned char *e_ident)
 
     for (i = 0; i < 4; i++)
     {
-        if (e_ident[i] != 127 &&
+        if (e_ident[i] != 0x7f &&
             e_ident[i] != 'E' &&
             e_ident[i] != 'L' &&
             e_ident[i] != 'F')
@@ -41,7 +41,6 @@ void pmagic(unsigned char *e_ident)
     for (i = 0; i < EI_NIDENT; i++)
     {
         printf("%02x", e_ident[i]);
-
         if (i == EI_NIDENT - 1)
             printf("\n");
         else
@@ -57,7 +56,6 @@ void pmagic(unsigned char *e_ident)
 void pclass(unsigned char *e_ident)
 {
     printf(" Class: ");
-
     switch (e_ident[EI_CLASS])
     {
     case ELFCLASSNONE:
@@ -75,14 +73,13 @@ void pclass(unsigned char *e_ident)
 }
 
 /**
- * pdata - Prints the data of an ELF header.
- * @e_ident: A pointer to the ELF class.
+ * pdata - Prints the data encoding of an ELF header.
+ * @e_ident: A pointer to the ELF data encoding.
  */
 
 void pdata(unsigned char *e_ident)
 {
     printf(" Data: ");
-
     switch (e_ident[EI_DATA])
     {
     case ELFDATANONE:
@@ -120,15 +117,15 @@ void pversion(unsigned char *e_ident)
 
 /**
  * posabi - Prints the OS/ABI of an ELF header.
- * @e_ident: A pointer to the ELF version.
+ * @e_ident: A pointer to the ELF OS/ABI.
  */
+
 void posabi(unsigned char *e_ident)
 {
     printf(" OS/ABI: ");
-
     switch (e_ident[EI_OSABI])
     {
-    case ELFOSABI_NONE:
+    case ELFOSABI_SYSV:
         printf("UNIX - System V\n");
         break;
     case ELFOSABI_HPUX:
@@ -170,21 +167,16 @@ void posabi(unsigned char *e_ident)
 
 void pabi(unsigned char *e_ident)
 {
-    printf(" ABI Version: %d\n",
-           e_ident[EI_ABIVERSION]);
+    printf(" ABI Version: %d\n", e_ident[EI_ABIVERSION]);
 }
 
 /**
  * ptype - Prints the type of an ELF header.
  * @e_type: The ELF type.
- * @e_ident: A pointer to the ELF class.
  */
 
-void ptype(unsigned int e_type, unsigned char *e_ident)
+void ptype(unsigned int e_type)
 {
-    if (e_ident[EI_DATA] == ELFDATA2MSB)
-        e_type = (e_type >> 8);
-
     printf(" Type: ");
     switch (e_type)
     {
@@ -209,41 +201,13 @@ void ptype(unsigned int e_type, unsigned char *e_ident)
 }
 
 /**
- * pentry - Prints the entry point of an ELF header.
- * @e_entry: The address of the ELF entry point.
- * @e_ident: A pointer to the ELF class.
+ * pentry - Prints the entry point address of an ELF header.
+ * @e_entry: The entry point address.
  */
 
-void pentry(unsigned long int e_entry, unsigned char *e_ident)
+void pentry(Elf64_Addr e_entry)
 {
-    printf(" Entry point address: ");
-
-    if (e_ident[EI_DATA] == ELFDATA2MSB)
-    {
-        e_entry = ((e_entry << 8) & 0xFF00FF00) |
-                  ((e_entry >> 8) & 0xFF00FF);
-        e_entry = (e_entry << 16) | (e_entry >> 16);
-    }
-
-    if (e_ident[EI_CLASS] == ELFCLASS32)
-        printf("%#x\n", (unsigned int)e_entry);
-    else
-        printf("%#lx\n", e_entry);
-}
-
-/**
- * _close - Closes an ELF file.
- * @elf: The file descriptor of the ELF file.
- */
-
-void _close(int elf)
-{
-    if (close(elf) == -1)
-    {
-        dprintf(STDERR_FILENO,
-                "Error: Can't close fd %d\n", elf);
-        exit(98);
-    }
+    printf(" Entry point address: %lx\n", e_entry);
 }
 
 /**
@@ -251,57 +215,47 @@ void _close(int elf)
  * @argc: The number of arguments supplied to the program.
  * @argv: An array of pointers to the arguments.
  *
- * Return: 0 on success.
+ * Return: 0 on success, 98 on error.
  */
 
-int main(int __attribute__((unused)) argc, char **argv)
+int main(int argc, char **argv)
 {
-    Elf64_Ehdr *header;
-    int file, read_status;
+    int fd;
+    Elf64_Ehdr header;
 
     if (argc != 2)
     {
         dprintf(STDERR_FILENO, "Usage: %s <ELF-file>\n", argv[0]);
-        exit(98);
+        return 98;
     }
 
-    file = open(argv[1], O_RDONLY);
-    if (file == -1)
+    fd = open(argv[1], O_RDONLY);
+    if (fd == -1)
     {
         dprintf(STDERR_FILENO, "Error: Can't open file %s\n", argv[1]);
-        exit(98);
+        return 98;
     }
 
-    header = malloc(sizeof(Elf64_Ehdr));
-    if (header == NULL)
+    if (read(fd, &header, sizeof(header)) != sizeof(header))
     {
         dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
-        _close(file);
-        exit(98);
+        close(fd);
+        return 98;
     }
 
-    read_status = read(file, header, sizeof(Elf64_Ehdr));
-    if (read_status == -1)
-    {
-        dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
-        free(header);
-        _close(file);
-        exit(98);
-    }
+    check_e(header.e_ident);
+    printf("ELF Header:\n");
+    pmagic(header.e_ident);
+    pclass(header.e_ident);
+    pdata(header.e_ident);
+    pversion(header.e_ident);
+    posabi(header.e_ident);
+    pabi(header.e_ident);
+    ptype(header.e_type);
+    pentry(header.e_entry);
 
-    check_e(header->e_ident);
-    pmagic(header->e_ident);
-    pclass(header->e_ident);
-    pdata(header->e_ident);
-    pversion(header->e_ident);
-    posabi(header->e_ident);
-    pabi(header->e_ident);
-    ptype(header->e_type, header->e_ident);
-    pentry(header->e_entry, header->e_ident);
+    close(fd);
 
-    free(header);
-    _close(file);
-
-    return (0);
+    return 0;
 }
 
