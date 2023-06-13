@@ -261,7 +261,7 @@ void _close(int elf)
 
 int main(int __attribute__((__unused__)) argc, char *argv[])
 {
-	Elf64_Ehdr *str;
+	Elf64_Ehdr *header;
 	int fopen, rd;
 
 	fopen = open(argv[1], O_RDONLY);
@@ -270,34 +270,34 @@ int main(int __attribute__((__unused__)) argc, char *argv[])
 		dprintf(STDERR_FILENO, "Error: Can't read file %s\n", argv[1]);
 		exit(98);
 	}
-	str = malloc(sizeof(Elf64_Ehdr));
-	if (str == NULL)
+	header = malloc(sizeof(Elf64_Ehdr));
+	if (header == NULL)
 	{
 		_close(fopen);
 		dprintf(STDERR_FILENO, "Error: Can't read file %s\n", argv[1]);
 		exit(98);
 	}
-	rd = read(fopen, str, sizeof(Elf64_Ehdr));
+	rd = read(fopen, header, sizeof(Elf64_Ehdr));
 	if (rd == -1)
 	{
-		free(str);
+		free(header);
 		_close(fopen);
 		dprintf(STDERR_FILENO, "Error: `%s`: No such file\n", argv[1]);
 		exit(98);
 	}
 
-	check_e(str->e_ident);
+	check_e(header->e_ident);
 	printf("ELF Header:\n");
-	pmagic(str->e_ident);
-	pclass(str->e_ident);
-	pdata(str->e_ident);
-	pversion(str->e_ident);
-	posabi(str->e_ident);
-	pabi(str->e_ident);
-	ptype(str->e_type, str->e_ident);
-	pentry(str->e_entry, str->e_ident);
+	pmagic(header->e_ident);
+	pclass(header->e_ident);
+	pdata(header->e_ident);
+	pversion(header->e_ident);
+	posabi(header->e_ident);
+	pabi(header->e_ident);
+	ptype(header->e_type, header->e_ident);
+	pentry(header->e_entry, header->e_ident);
 
-	free(str);
+	free(header);
 	_close(fopen);
 	return (0);
 }
