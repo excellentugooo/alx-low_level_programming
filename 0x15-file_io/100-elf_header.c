@@ -8,19 +8,19 @@
 
 /**
  * check_e - Checks if a file is an ELF file.
- * @e_id: A pointer to an array containing the ELF magic numbers.
+ * @e_ident: A pointer to an array containing the ELF magic numbers.
  */
 
-void check_e(unsigned char *e_id)
+void check_e(unsigned char *e_ident)
 {
 	int i;
 
 	for (i = 0; i < 4; i++)
 	{
-		if (e_id[i] != 127 &&
-		    e_id[i] != 'E' &&
-		    e_id[i] != 'L' &&
-		    e_id[i] != 'F')
+		if (e_ident[i] != 127 &&
+		    e_ident[i] != 'E' &&
+		    e_ident[i] != 'L' &&
+		    e_ident[i] != 'F')
 		{
 			dprintf(STDERR_FILENO, "Error: Not an ELF file\n");
 			exit(98);
@@ -30,10 +30,10 @@ void check_e(unsigned char *e_id)
 
 /**
  * pmagic - Prints the magic numbers of an ELF header.
- * @e_id: A pointer to ELF magic numbers.
+ * @e_ident: A pointer to ELF magic numbers.
  */
 
-void pmagic(unsigned char *e_id)
+void pmagic(unsigned char *e_ident)
 {
 	int i;
 
@@ -41,7 +41,7 @@ void pmagic(unsigned char *e_id)
 
 	for (i = 0; i < EI_NIDENT; i++)
 	{
-		printf("%02x", e_id[i]);
+		printf("%02x", e_ident[i]);
 
 		if (i == EI_NIDENT - 1)
 			printf("\n");
@@ -52,14 +52,14 @@ void pmagic(unsigned char *e_id)
 
 /**
  * pclass - Prints the class of an ELF header.
- * @e_id: A pointer to an array containing the ELF class.
+ * @e_ident: A pointer to an array containing the ELF class.
  */
 
-void pclass(unsigned char *e_id)
+void pclass(unsigned char *e_ident)
 {
 	printf(" Class: ");
 
-	switch (e_id[EI_CLASS])
+	switch (e_ident[EI_CLASS])
 	{
 	case ELFCLASSNONE:
 		printf("none\n");
@@ -71,20 +71,20 @@ void pclass(unsigned char *e_id)
 		printf("ELF64\n");
 		break;
 	default:
-		printf("<unknown: %x>\n", e_id[EI_CLASS]);
+		printf("<unknown: %x>\n", e_ident[EI_CLASS]);
 	}
 }
 
 /**
  * pdata - Prints the data of an ELF header.
- * @e_id: A pointer to the ELF class.
+ * @e_ident: A pointer to the ELF class.
  */
 
-void pdata(unsigned char *e_id)
+void pdata(unsigned char *e_ident)
 {
 	printf(" Data: ");
 
-	switch (e_id[EI_DATA])
+	switch (e_ident[EI_DATA])
 	{
 	case ELFDATANONE:
 		printf("none\n");
@@ -96,21 +96,21 @@ void pdata(unsigned char *e_id)
 		printf("2's complement, big endian\n");
 		break;
 	default:
-		printf("<unknown: %x>\n", e_id[EI_CLASS]);
+		printf("<unknown: %x>\n", e_ident[EI_CLASS]);
 	}
 }
 
 /**
  * pversion - Prints the version of an ELF header.
- * @e_id: A pointer to the ELF version.
+ * @e_ident: A pointer to the ELF version.
  */
 
-void pversion(unsigned char *e_id)
+void pversion(unsigned char *e_ident)
 {
 	 printf(" Version: %d",
-			  e_id[EI_VERSION]);
+			  e_ident[EI_VERSION]);
 
-	switch (e_id[EI_VERSION])
+	switch (e_ident[EI_VERSION])
 	{
 	case EV_CURRENT:
 		printf(" (current)\n");
@@ -123,13 +123,13 @@ void pversion(unsigned char *e_id)
 
 /**
  * posabi - Prints the OS/ABI of an ELF header.
- * @e_id: A pointer to the ELF version.
+ * @e_ident: A pointer to the ELF version.
  */
-void posabi(unsigned char *e_id)
+void posabi(unsigned char *e_ident)
 {
 	printf(" OS/ABI: ");
 
-	switch (e_id[EI_OSABI])
+	switch (e_ident[EI_OSABI])
 	{
 	case ELFOSABI_NONE:
 		printf("UNIX - System V\n");
@@ -162,35 +162,35 @@ void posabi(unsigned char *e_id)
 		printf("Standalone App\n");
 		break;
 	default:
-		printf("<unknown: %x>\n", e_id[EI_OSABI]);
+		printf("<unknown: %x>\n", e_ident[EI_OSABI]);
 	}
 }
 
 /**
  * pabi - Prints the ABI version of an ELF header.
- * @e_id: A pointer to the ELF ABI version.
+ * @e_ident: A pointer to the ELF ABI version.
  */
 
-void pabi(unsigned char *e_id)
+void pabi(unsigned char *e_ident)
 {
 	printf(" ABI Version: %d\n",
-		e_id[EI_ABIVERSION]);
+		e_ident[EI_ABIVERSION]);
 }
 
 /**
  * ptype - Prints the type of an ELF header.
- * @e_typ: The ELF type.
- * @e_id: A pointer to the ELF class.
+ * @e_type: The ELF type.
+ * @e_ident: A pointer to the ELF class.
  */
 
-void ptype(unsigned int e_typ, unsigned char *e_id)
+void ptype(unsigned int e_type, unsigned char *e_ident)
 {
-	if (e_id[EI_DATA] == ELFDATA2MSB)
-		e_typ >>= 8;
+	if (e_ident[EI_DATA] == ELFDATA2MSB)
+		e_type >>= 8;
 
 	printf(" Type: ");
 
-	switch (e_typ)
+	switch (e_type)
 	{
 	case ET_NONE:
 		printf("NONE (None)\n");
@@ -208,32 +208,32 @@ void ptype(unsigned int e_typ, unsigned char *e_id)
 		printf("CORE (Core file)\n");
 		break;
 	default:
-		printf("<unknown: %x>\n", e_typ);
+		printf("<unknown: %x>\n", e_type);
 	}
 }
 
 /**
  * pentry - Prints the entry point of an ELF header.
- * @e_ent: The address of the ELF entry point.
- * @e_id: A pointer to the ELF class.
+ * @e_entry: The address of the ELF entry point.
+ * @e_ident: A pointer to the ELF class.
  */
 
-void pentry(unsigned long int e_ent, unsigned char *e_id)
+void pentry(unsigned long int e_entry, unsigned char *e_ident)
 {
 	printf(" Entry point address: ");
 
-	if (e_id[EI_DATA] == ELFDATA2MSB)
+	if (e_ident[EI_DATA] == ELFDATA2MSB)
 	{
-		e_ent = ((e_ent << 8) & 0xFF00FF00) |
-			  ((e_ent >> 8) & 0xFF00FF);
-		e_ent = (e_ent << 16) | (e_ent >> 16);
+		e_entry = ((e_entry << 8) & 0xFF00FF00) |
+			  ((e_entry >> 8) & 0xFF00FF);
+		e_entry = (e_entry << 16) | (e_entry >> 16);
 	}
 
-	if (e_id[EI_CLASS] == ELFCLASS32)
-		printf("%#x\n", (unsigned int)e_ent);
+	if (e_ident[EI_CLASS] == ELFCLASS32)
+		printf("%#x\n", (unsigned int)e_entry);
 
 	else
-		printf("%#lx\n", e_ent);
+		printf("%#lx\n", e_entry);
 }
 
 /**
