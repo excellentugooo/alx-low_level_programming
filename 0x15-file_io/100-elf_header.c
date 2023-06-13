@@ -6,6 +6,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void check_e(unsigned char *e_ident);
+void pmagic(unsigned char *e_ident);
+void pclass(unsigned char *e_ident);
+void pdata(unsigned char *e_ident);
+void pversion(unsigned char *e_ident);
+void pabi(unsigned char *e_ident);
+void posabi(unsigned char *e_ident);
+void ptype(unsigned int e_type, unsigned char *e_ident);
+void pentry(unsigned long int e_entry, unsigned char *e_ident);
+void _close(int elf);
+
 /**
  * check_e - Checks if a file is an ELF file.
  * @e_ident: A pointer to an array containing the ELF magic numbers.
