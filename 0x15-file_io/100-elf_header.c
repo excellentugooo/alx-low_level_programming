@@ -170,7 +170,8 @@ void posabi(unsigned char *e_ident)
 
 void pabi(unsigned char *e_ident)
 {
-    printf(" ABI Version: %d\n", e_ident[EI_ABIVERSION]);
+    printf(" ABI Version: %d\n",
+           e_ident[EI_ABIVERSION]);
 }
 
 /**
@@ -182,7 +183,7 @@ void pabi(unsigned char *e_ident)
 void ptype(unsigned int e_type, unsigned char *e_ident)
 {
     if (e_ident[EI_DATA] == ELFDATA2MSB)
-        e_type >>= 8;
+        e_type = (e_type >> 8);
 
     printf(" Type: ");
     switch (e_type)
@@ -239,7 +240,8 @@ void _close(int elf)
 {
     if (close(elf) == -1)
     {
-        dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", elf);
+        dprintf(STDERR_FILENO,
+                "Error: Can't close fd %d\n", elf);
         exit(98);
     }
 }
@@ -252,45 +254,54 @@ void _close(int elf)
  * Return: 0 on success.
  */
 
-int main(int __attribute__((__unused__)) argc, char *argv[])
+int main(int __attribute__((unused)) argc, char **argv)
 {
-    Elf64_Ehdr *str;
-    int fopen, rd;
-    fopen = open(argv[1], O_RDONLY);
-    if (fopen == -1)
+    Elf64_Ehdr *header;
+    int file, read_status;
+
+    if (argc != 2)
     {
-        dprintf(STDERR_FILENO, "Error: Can't read file %s\n", argv[1]);
-        exit(98);
-    }
-    str = malloc(sizeof(Elf64_Ehdr));
-    if (str == NULL)
-    {
-        _close(fopen);
-        dprintf(STDERR_FILENO, "Error: Can't allocate memory\n");
-        exit(98);
-    }
-    rd = read(fopen, str, sizeof(Elf64_Ehdr));
-    if (rd == -1)
-    {
-        free(str);
-        _close(fopen);
-        dprintf(STDERR_FILENO, "Error: Can't read file %s\n", argv[1]);
+        dprintf(STDERR_FILENO, "Usage: %s <ELF-file>\n", argv[0]);
         exit(98);
     }
 
-    check_e(str->e_ident);
-    printf("ELF Header:\n");
-    pmagic(str->e_ident);
-    pclass(str->e_ident);
-    pdata(str->e_ident);
-    pversion(str->e_ident);
-    posabi(str->e_ident);
-    pabi(str->e_ident);
-    ptype(str->e_type, str->e_ident);
-    pentry(str->e_entry, str->e_ident);
+    file = open(argv[1], O_RDONLY);
+    if (file == -1)
+    {
+        dprintf(STDERR_FILENO, "Error: Can't open file %s\n", argv[1]);
+        exit(98);
+    }
 
-    free(str);
-    _close(fopen);
-    return 0;
+    header = malloc(sizeof(Elf64_Ehdr));
+    if (header == NULL)
+    {
+        dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
+        _close(file);
+        exit(98);
+    }
+
+    read_status = read(file, header, sizeof(Elf64_Ehdr));
+    if (read_status == -1)
+    {
+        dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
+        free(header);
+        _close(file);
+        exit(98);
+    }
+
+    check_e(header->e_ident);
+    pmagic(header->e_ident);
+    pclass(header->e_ident);
+    pdata(header->e_ident);
+    pversion(header->e_ident);
+    posabi(header->e_ident);
+    pabi(header->e_ident);
+    ptype(header->e_type, header->e_ident);
+    pentry(header->e_entry, header->e_ident);
+
+    free(header);
+    _close(file);
+
+    return (0);
 }
 
