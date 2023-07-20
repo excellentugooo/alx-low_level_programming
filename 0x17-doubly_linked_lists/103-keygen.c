@@ -21,7 +21,7 @@ int fbig(char *usern, int lenght)
 	while (vch < lenght)
 	{
 		if (ch < usern[vch])
-			ch = usrn[vch];
+			ch = usern[vch];
 		vch += 1;
 	}
 
