@@ -92,8 +92,8 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 	{
 		new_ht->sprev = NULL;
 		new_ht->snext = NULL;
-		ht->shead = new;
-		ht->stail = new;
+		ht->shead = new_ht;
+		ht->stail = new_ht;
 	}
 	else if (strcmp(ht->shead->key, key) > 0)
 	{
